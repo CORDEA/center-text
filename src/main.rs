@@ -3,8 +3,9 @@ extern crate imageproc;
 extern crate rusttype;
 
 use imageproc::drawing::{draw_text_mut, draw_hollow_rect_mut};
-use image::{GenericImageView, Rgba};
+use imageproc::rect::Rect as ProcRect;
 use rusttype::{FontCollection, Scale, Rect, point};
+use image::{GenericImageView, Rgba};
 
 fn main() {
     let mut image = image::open("white.png").unwrap();
@@ -34,7 +35,7 @@ fn main() {
 
     let red = Rgba([255, 0, 0, 255]);
     for glyph in glyphs.iter() {
-        let rect = imageproc::rect::Rect::at(glyph.min.x + center_x as i32, glyph.min.y + center_y as i32)
+        let rect = ProcRect::at(glyph.min.x + center_x as i32, glyph.min.y + center_y as i32)
             .of_size(glyph.width() as u32, glyph.height() as u32);
         draw_hollow_rect_mut(&mut image, rect, red);
     }
@@ -46,7 +47,7 @@ fn main() {
     let min_y = glyphs.iter().map(|g| g.min.y).min().unwrap();
     let max_y = glyphs.iter().map(|g| g.max.y).max().unwrap();
 
-    let rect = imageproc::rect::Rect::at(first.x + center_x as i32, min_y + center_y as i32)
+    let rect = ProcRect::at(first.x + center_x as i32, min_y + center_y as i32)
         .of_size((last.x - first.x) as u32, (max_y - min_y) as u32);
     draw_hollow_rect_mut(&mut image, rect, blue);
 
