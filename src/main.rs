@@ -2,9 +2,9 @@ extern crate image;
 extern crate imageproc;
 extern crate rusttype;
 
-use imageproc::drawing::draw_text_mut;
+use imageproc::drawing::{draw_text_mut, draw_hollow_rect_mut};
 use image::Rgba;
-use rusttype::{FontCollection, Scale};
+use rusttype::{FontCollection, Scale, Rect, point};
 
 fn main() {
     let mut image = image::open("white.png").unwrap();
@@ -12,8 +12,22 @@ fn main() {
     let font = Vec::from(include_bytes!("Roboto-Black.ttf") as &[u8]);
     let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
 
+    let text = "hello";
     let scale = Scale { x: 100.0, y: 100.0 };
-    draw_text_mut(&mut image, Rgba([0u8, 0u8, 0u8, 1u8]), 0, 0, scale, &font, "hello");
+    let point = point(0.0, font.v_metrics(scale).ascent);
+
+    let glyphs: Vec<Rect<i32>> = font.layout(text, scale, point)
+        .map(|g| g.pixel_bounding_box().unwrap())
+        .collect();
+
+    draw_text_mut(&mut image, Rgba([0, 0, 0, 255]), 0, 0, scale, &font, text);
+
+    let red = Rgba([255, 0, 0, 255]);
+    for glyph in glyphs {
+        let rect = imageproc::rect::Rect::at(glyph.min.x, glyph.min.y)
+            .of_size(glyph.width() as u32, glyph.height() as u32);
+        draw_hollow_rect_mut(&mut image, rect, red);
+    }
 
     let _ = image.save("hello.png").unwrap();
 }
