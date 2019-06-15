@@ -34,7 +34,7 @@ fn main() {
 
     let red = Rgba([255, 0, 0, 255]);
     for glyph in glyphs.iter() {
-        let rect = imageproc::rect::Rect::at(glyph.min.x, glyph.min.y)
+        let rect = imageproc::rect::Rect::at(glyph.min.x + center_x as i32, glyph.min.y + center_y as i32)
             .of_size(glyph.width() as u32, glyph.height() as u32);
         draw_hollow_rect_mut(&mut image, rect, red);
     }
@@ -46,7 +46,7 @@ fn main() {
     let min_y = glyphs.iter().map(|g| g.min.y).min().unwrap();
     let max_y = glyphs.iter().map(|g| g.max.y).max().unwrap();
 
-    let rect = imageproc::rect::Rect::at(first.x, min_y)
+    let rect = imageproc::rect::Rect::at(first.x + center_x as i32, min_y + center_y as i32)
         .of_size((last.x - first.x) as u32, (max_y - min_y) as u32);
     draw_hollow_rect_mut(&mut image, rect, blue);
 
