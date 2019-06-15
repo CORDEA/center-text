@@ -41,12 +41,6 @@ fn main() {
     }
 
     let blue = Rgba([0, 255, 0, 255]);
-
-    let first = glyphs.first().unwrap().min;
-    let last = glyphs.last().unwrap().max;
-    let min_y = glyphs.iter().map(|g| g.min.y).min().unwrap();
-    let max_y = glyphs.iter().map(|g| g.max.y).max().unwrap();
-
     let rect = ProcRect::at(first.x + center_x as i32, min_y + center_y as i32)
         .of_size((last.x - first.x) as u32, (max_y - min_y) as u32);
     draw_hollow_rect_mut(&mut image, rect, blue);
