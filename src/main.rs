@@ -12,7 +12,7 @@ fn main() {
     let font = Vec::from(include_bytes!("Roboto-Black.ttf") as &[u8]);
     let font = FontCollection::from_bytes(font).unwrap().into_font().unwrap();
 
-    let text = "hello";
+    let text = "rustpythonclojureC#";
     let scale = Scale { x: 100.0, y: 100.0 };
     let point = point(0.0, font.v_metrics(scale).ascent);
 
